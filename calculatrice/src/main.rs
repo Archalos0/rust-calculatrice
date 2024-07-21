@@ -1,4 +1,5 @@
-use std::{io::{self, Write}, vec};
+use std::io::{self, Write};
+
 
 fn main() {
     println!("Hello, world!");
@@ -18,18 +19,10 @@ fn main() {
 
     println!("input after cleaning : {}", operation);
 
-    let split_operation = split_operation(&operation);
-    println!("The operation has been split :");
-    for i in 0..split_operation.len() {
-        println!("{}", split_operation[i]);
-    }
+    let split_operation = split_operation(&operation);  
 
-
-    println!("10 + 3 = {}", calculate(10, 3, '+'));
-    println!("10 - 3 = {}", calculate(10, 3, '-'));
-    println!("10 * 3 = {}", calculate(10, 3, '*'));
-    println!("10 / 3 = {}", calculate(10, 3, '/'));
-
+    let result = calculate(&split_operation[0], &split_operation[2], &split_operation[1]);
+    println!("The result of the operation is : {} {} {} = {}", split_operation[0], split_operation[1], split_operation[2], result);
 }
 
 fn clean_input(input: &mut String) -> String{
@@ -40,40 +33,49 @@ fn is_a_symbol(c: &char) -> bool {
     ['+', '-', '*', '/'].contains(c)
 }
 
-fn split_operation(operation: &String) -> Vec<&str> {
-    let mut v: Vec<&str> = Vec::new();
+fn split_operation(operation: &String) -> Vec<String> {
+    let mut v: Vec<String> = Vec::new();
 
-    let mut last_symbol = 0;
+    let mut last_index = 0;
     for (index, c) in operation.chars().enumerate() {
-        if is_a_symbol(&c) || index == operation.len() - 1 {
-            v.push(operation.get(last_symbol..index).expect("Error"));
-            last_symbol = index;
-            v.push(operation.get(last_symbol..last_symbol + 1).expect("Error"));
-            last_symbol = index + 1;
+        if is_a_symbol(&c) {
+            let left: String = operation[last_index..index].to_string();
+            v.push(left);
+            v.push(c.to_string());
+            last_index = index + 1;
         }
+    }
+
+    // Ajouter le dernier opérande après la boucle
+    if last_index < operation.len() {
+        let right: String = operation[last_index..].to_string();
+        v.push(right.trim().to_string());
     }
 
     v
 }
 
-fn calculate(left_member: i32, right_member: i32, operator: char) -> i32{
-    let mut result = 0;
+fn string_to_i32(s: String) -> i32 {
+    let number: i32 = match s.trim().parse::<i32>() {
+        Ok(number) => number,
+        Err(_) => panic!("Error parsing"),
+    };
 
-    if operator == '+' {
-        result = left_member + right_member;
+    number
+}
+
+fn calculate(left_member: &String, right_member: &String, operator: &String) -> i32{
+
+    let left: i32 = string_to_i32(left_member.to_string());
+    let right: i32 = string_to_i32(right_member.to_string());
+
+
+    match operator.as_str() {
+        "+" => left + right,
+        "-" => left - right,
+        "*" => left * right,
+        "/" => left / right,
+        _ => panic!("Unknown operator"),
     }
 
-    if operator == '-' {
-        result = left_member - right_member;
-    }
-
-    if operator == '*' {
-        result = left_member * right_member;
-    }
-
-    if operator == '/' {
-        result = left_member / right_member;
-    }
-
-    result
 }
