@@ -14,11 +14,18 @@ fn main() {
 
     println!("the user input is : {}", input);
 
+    let operation = clean_input(&mut input);
+
+    println!("input after cleaning : {}", operation);
 
     println!("10 + 3 = {}", calculate(10, 3, '+'));
     println!("10 - 3 = {}", calculate(10, 3, '-'));
     println!("10 * 3 = {}", calculate(10, 3, '*'));
     println!("10 / 3 = {}", calculate(10, 3, '/'));
+}
+
+fn clean_input(input: &mut String) -> String{
+    input.replace(' ', "")
 }
 
 fn calculate(left_member: i32, right_member: i32, operator: char) -> i32{
