@@ -21,14 +21,12 @@ fn main() {
 
     let split_operation = split_operation(&operation);  
 
-    let result = calculate_full_operation(&split_operation);
+    let result = calculate_full_operation(split_operation.clone());
     println!("result : {}", result);
-    // let result = calculate(&split_operation[0], &split_operation[2], &split_operation[1]);
-    // println!("The result of the operation is : {} {} {} = {}", split_operation[0], split_operation[1], split_operation[2], result);
+
 }
 
 fn has_more_than_one_operator(v_operation: &Vec<String>) -> bool {
-    //println!("v_operation.len() = {}", v_operation.len());
     v_operation.len() > 3
 }
 
@@ -36,33 +34,49 @@ fn is_single_member(v_operation: &Vec<String>) -> bool {
     v_operation.len() == 1
 }
 
-fn calculate_full_operation(v_operation: &Vec<String>) -> i32 {
+fn calculate_full_operation(v_operation: Vec<String>) -> i32 {
     
+    let mut operations = v_operation.clone();
+
     let result: i32;
 
-    if is_single_member(v_operation) {
-        result = string_to_i32(&v_operation[0]);
+    if is_single_member(&operations) {
+        result = string_to_i32(&operations[0])
 
     } else {
 
-        let mut left_member = 0;
-        let mut right_member = 0;
-        let mut operator: String = String::new();
-    
-        if has_more_than_one_operator(v_operation) {
-            //println!("More than one operator");
-            println!("left _operand : {:?}", &v_operation[0..3]);
-            left_member = calculate_full_operation(&v_operation[0..3].to_vec());
-            operator = v_operation[3].to_string();
-            println!("right_operand : {:?}", &v_operation[4..]);
-            right_member = calculate_full_operation(&v_operation[4..].to_vec());
+        if has_more_than_one_operator(&operations) {
+
+            let index_operation: usize = v_operation.iter().position(|op| ["*","/"].contains(&op.as_str())).unwrap_or(0);
+            
+            println!("first operator priority : {:?}", index_operation);
+            if index_operation == 0 {
+                println!("full operation : {:?}", operations);
+                println!("operation to calculate : {:?}", operations[0..3].to_vec());
+                operations.insert(0, calculate_full_operation(operations[0..3].to_vec()).to_string());
+                operations.remove(1);
+                operations.remove(1);
+                operations.remove(1);
+                println!("after operation : {:?}", operations);
+                result = calculate_full_operation(operations)
+            } else {
+                println!("full operation : {:?}", operations);
+                println!("operation to calculate : {:?}", operations[(index_operation-1)..(index_operation+2)].to_vec());
+                operations.insert(index_operation - 1, calculate_full_operation(operations[index_operation-1..index_operation+2].to_vec()).to_string());
+                operations.remove(index_operation);
+                operations.remove(index_operation);
+                operations.remove(index_operation);
+                result = calculate_full_operation(operations)
+            }
+
         } else {
-            left_member = string_to_i32(&v_operation[0]);
-            operator = v_operation[1].to_string();
-            right_member = string_to_i32(&v_operation[2]);
+            let left_member = string_to_i32(&operations[0]);
+            let operator = v_operation[1].to_string();
+            let right_member = string_to_i32(&operations[2]);
+
+            result = calculate(left_member, right_member, operator)
         }
         
-        result = calculate(left_member, right_member, operator)
     }
 
     result
