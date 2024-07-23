@@ -1,5 +1,6 @@
 use std::{io::{self, Write}, time::Instant};
 
+// TODO : if '(' after a number or ')' add '*' between
 
 fn main() {
     let mut input = String::new();
