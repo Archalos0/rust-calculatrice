@@ -101,7 +101,7 @@ fn is_a_symbol(c: &char) -> bool {
     ['+', '-', '*', '/'].contains(c)
 }
 
-fn parenthesis_handler(chars: &Vec<char>) {
+fn check_parenthesis_number(chars: &Vec<char>) {
     let mut n_open_par = 0;
     let iter = chars.iter();
     iter.for_each(|c| if *c == '(' { n_open_par += 1 });
@@ -158,7 +158,7 @@ fn split_operation(operation: String) -> Vec<String> {
         char_v.push(c);
     }
 
-    parenthesis_handler(&char_v);
+    check_parenthesis_number(&char_v);
 
     let mut reg = get_regroupments(&char_v);
 
