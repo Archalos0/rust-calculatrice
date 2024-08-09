@@ -31,11 +31,14 @@ fn is_single_member(v_operation: &Vec<String>) -> bool {
     v_operation.len() == 1
 }
 
-fn string_to_split_operation(s: String) -> Vec<String> {
+fn split_parenthesis_expression(s: String) -> Vec<String> {
     let mut new_operations = s;
+
+    // removing the parenthesis
     new_operations.remove(new_operations.len() - 1);
     new_operations.remove(0);
-        
+    
+    //returning the expression splitted
     split_operation(new_operations)
 }
 
@@ -48,7 +51,7 @@ fn calculate_expression(v_operation: Vec<String>) -> i32 {
     if is_single_member(&operations) {
         let new_operations = operations[0].clone();
         if new_operations.starts_with("(") {            
-            result = calculate_expression(string_to_split_operation(new_operations))
+            result = calculate_expression(split_parenthesis_expression(new_operations))
         } else {
             result = string_to_i32(&operations[0])
         }
@@ -68,7 +71,7 @@ fn calculate_expression(v_operation: Vec<String>) -> i32 {
         } else {
             
             let left_member: i32 = if operations[0].starts_with("(") {
-                calculate_expression(string_to_split_operation(operations[0].clone()))
+                calculate_expression(split_parenthesis_expression(operations[0].clone()))
             } else {
                 string_to_i32(&operations[0])
             };
@@ -76,7 +79,7 @@ fn calculate_expression(v_operation: Vec<String>) -> i32 {
             let operator = v_operation[1].to_string();
 
             let right_member: i32 = if operations[2].starts_with("(") {
-                calculate_expression(string_to_split_operation(operations[2].clone()))
+                calculate_expression(split_parenthesis_expression(operations[2].clone()))
             } else {
                 string_to_i32(&operations[2])
             };
@@ -184,7 +187,7 @@ fn split_operation(operation: String) -> Vec<String> {
         let right: String = operation[last_index..].to_string();
         v.push(right.trim().to_string());
     }
-    
+
     v
 }
 
