@@ -94,7 +94,7 @@ fn calculate_expression(v_operation: Vec<String>) -> i32 {
 }
 
 fn clean_input(input: &mut String) -> String{
-    input.replace(' ', "")
+    String::from(input.replace(' ', "").trim())
 }
 
 fn is_a_symbol(c: &char) -> bool {
@@ -162,24 +162,43 @@ fn split_operation(operation: String) -> Vec<String> {
 
     let mut reg = get_regroupments(&char_v);
 
+    let mut char_before = ' ';
+
     let mut index_to_go = 0;
     for (index, c) in operation.chars().enumerate() {
+        
+        if index_to_go >= operation.len() {
+            last_index = operation.len();
+            break;
+        }
+
         if index < index_to_go {
             continue;
         }
 
         if c == '(' {
+
+            if index > 0 && char_before != ' ' && (char_before == ')' || (char_before >= '0' && char_before <= '9') ) {
+                let left: String = operation[last_index..index].to_string();
+                v.push(left);
+                v.push(String::from("*"))
+            }
+
             v.push(reg[0].clone());
             index_to_go = index + reg[0].len();
+            println!("skip to : {index_to_go}");
             reg.remove(0);
+
         } else if is_a_symbol(&c) {
-            if &operation[last_index..last_index+1] != "(" {
+            if &operation[index-1..index] != ")" {
                 let left: String = operation[last_index..index].to_string();
                 v.push(left);
             }
             v.push(c.to_string());
             last_index = index + 1;
         }
+
+        char_before = c;
     }
 
     // Ajouter le dernier opérande après la boucle
