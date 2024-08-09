@@ -18,7 +18,7 @@ fn main() {
 
     let split_operation = split_operation(operation.clone());  
 
-    let result = calculate_full_operation(split_operation.clone());
+    let result = calculate_expression(split_operation.clone());
 
     println!("The operation and the result are :\n{} = {}\nIn : {:?}", operation.trim_end(), result, time.elapsed());
 }
@@ -39,7 +39,7 @@ fn string_to_split_operation(s: String) -> Vec<String> {
     split_operation(new_operations)
 }
 
-fn calculate_full_operation(v_operation: Vec<String>) -> i32 {
+fn calculate_expression(v_operation: Vec<String>) -> i32 {
 
     let mut operations = v_operation.clone();
 
@@ -48,7 +48,7 @@ fn calculate_full_operation(v_operation: Vec<String>) -> i32 {
     if is_single_member(&operations) {
         let new_operations = operations[0].clone();
         if new_operations.starts_with("(") {            
-            result = calculate_full_operation(string_to_split_operation(new_operations))
+            result = calculate_expression(string_to_split_operation(new_operations))
         } else {
             result = string_to_i32(&operations[0])
         }
@@ -59,16 +59,16 @@ fn calculate_full_operation(v_operation: Vec<String>) -> i32 {
             
             let index_operation: usize = v_operation.iter().position(|op| ["*","/"].contains(&op.as_str())).unwrap_or(1);
             
-            operations.insert(index_operation - 1, calculate_full_operation(operations[index_operation-1..index_operation+2].to_vec()).to_string());
+            operations.insert(index_operation - 1, calculate_expression(operations[index_operation-1..index_operation+2].to_vec()).to_string());
             operations.remove(index_operation);
             operations.remove(index_operation);
             operations.remove(index_operation);
-            result = calculate_full_operation(operations)
+            result = calculate_expression(operations)
         
         } else {
             
             let left_member: i32 = if operations[0].starts_with("(") {
-                calculate_full_operation(string_to_split_operation(operations[0].clone()))
+                calculate_expression(string_to_split_operation(operations[0].clone()))
             } else {
                 string_to_i32(&operations[0])
             };
@@ -76,7 +76,7 @@ fn calculate_full_operation(v_operation: Vec<String>) -> i32 {
             let operator = v_operation[1].to_string();
 
             let right_member: i32 = if operations[2].starts_with("(") {
-                calculate_full_operation(string_to_split_operation(operations[2].clone()))
+                calculate_expression(string_to_split_operation(operations[2].clone()))
             } else {
                 string_to_i32(&operations[2])
             };
@@ -97,14 +97,6 @@ fn clean_input(input: &mut String) -> String{
 fn is_a_symbol(c: &char) -> bool {
     ['+', '-', '*', '/'].contains(c)
 }
-
-// fn is_an_open_parenthesis(c: char) -> bool {
-//     c == '('
-// }
-
-// fn is_a_close_parenthesis(c: char) -> bool {
-//     c == ')'
-// }
 
 fn parenthesis_handler(chars: &Vec<char>) {
     let mut n_open_par = 0;
@@ -167,25 +159,17 @@ fn split_operation(operation: String) -> Vec<String> {
 
     let mut reg = get_regroupments(&char_v);
 
-    //println!("regroupments : {:?}", reg);
-
     let mut index_to_go = 0;
     for (index, c) in operation.chars().enumerate() {
-        //println!("index: {index}, char: {c}");
         if index < index_to_go {
-            //println!("skip");
             continue;
         }
 
         if c == '(' {
             v.push(reg[0].clone());
-            //println!("reg[0] : {:?}", reg[0]);
             index_to_go = index + reg[0].len();
             reg.remove(0);
-            //println!("index_to_go: {}", index_to_go);
         } else if is_a_symbol(&c) {
-            //println!("found a symbol");
-
             if &operation[last_index..last_index+1] != "(" {
                 let left: String = operation[last_index..index].to_string();
                 v.push(left);
@@ -200,9 +184,7 @@ fn split_operation(operation: String) -> Vec<String> {
         let right: String = operation[last_index..].to_string();
         v.push(right.trim().to_string());
     }
-
-    //println!("operation : {:?}", v);
-
+    
     v
 }
 
