@@ -21,14 +21,11 @@ fn main() {
 
     let split_operation = split_operation(&operation);  
 
-    let result = calculate_full_operation(&split_operation);
+    let result = calculate_expression(&split_operation);
     println!("result : {}", result);
-    // let result = calculate(&split_operation[0], &split_operation[2], &split_operation[1]);
-    // println!("The result of the operation is : {} {} {} = {}", split_operation[0], split_operation[1], split_operation[2], result);
 }
 
 fn has_more_than_one_operator(v_operation: &Vec<String>) -> bool {
-    //println!("v_operation.len() = {}", v_operation.len());
     v_operation.len() > 3
 }
 
@@ -36,7 +33,7 @@ fn is_single_member(v_operation: &Vec<String>) -> bool {
     v_operation.len() == 1
 }
 
-fn calculate_full_operation(v_operation: &Vec<String>) -> i32 {
+fn calculate_expression(v_operation: &Vec<String>) -> i32 {
     
     let result: i32;
 
@@ -44,25 +41,19 @@ fn calculate_full_operation(v_operation: &Vec<String>) -> i32 {
         result = string_to_i32(&v_operation[0]);
 
     } else {
-
-        let mut left_member = 0;
-        let mut right_member = 0;
-        let mut operator: String = String::new();
-    
+   
         if has_more_than_one_operator(v_operation) {
-            //println!("More than one operator");
-            println!("left _operand : {:?}", &v_operation[0..3]);
-            left_member = calculate_full_operation(&v_operation[0..3].to_vec());
-            operator = v_operation[3].to_string();
-            println!("right_operand : {:?}", &v_operation[4..]);
-            right_member = calculate_full_operation(&v_operation[4..].to_vec());
+            let left_member = calculate_expression(&v_operation[0..3].to_vec());
+            let operator = v_operation[3].to_string();
+            let right_member = calculate_expression(&v_operation[4..].to_vec());
+            result = calculate(left_member, right_member, operator)
         } else {
-            left_member = string_to_i32(&v_operation[0]);
-            operator = v_operation[1].to_string();
-            right_member = string_to_i32(&v_operation[2]);
+            let left_member = string_to_i32(&v_operation[0]);
+            let operator = v_operation[1].to_string();
+            let right_member = string_to_i32(&v_operation[2]);
+            result = calculate(left_member, right_member, operator)
         }
         
-        result = calculate(left_member, right_member, operator)
     }
 
     result
@@ -109,10 +100,6 @@ fn string_to_i32(s: &String) -> i32 {
 }
 
 fn calculate(left_member: i32, right_member: i32, operator: String) -> i32{
-
-    // let left: i32 = string_to_i32(left_member.to_string());
-    // let right: i32 = string_to_i32(right_member.to_string());
-
 
     match operator.as_str() {
         "+" => left_member + right_member,
