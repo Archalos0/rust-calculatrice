@@ -1,6 +1,6 @@
 use std::{io::{self, Write}, time::Instant};
 
-// TODO : if '(' after a number or ')' add '*' between
+// TODO : handle ()()
 
 fn main() {
     let mut input = String::new();
@@ -166,7 +166,7 @@ fn split_operation(operation: String) -> Vec<String> {
 
     let mut index_to_go = 0;
     for (index, c) in operation.chars().enumerate() {
-        
+        println!("{:?}", v);
         if index_to_go >= operation.len() {
             last_index = operation.len();
             break;
