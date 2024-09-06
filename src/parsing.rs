@@ -19,7 +19,7 @@ pub fn split_operation(operation: String) -> Vec<String> {
 
     let mut index_to_go = 0;
     for (index, c) in operation.chars().enumerate() {
-        println!("{:?}", v);
+        //println!("{:?}", v);
         if index_to_go >= operation.len() {
             last_index = operation.len();
             break;
