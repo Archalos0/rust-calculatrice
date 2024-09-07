@@ -17,3 +17,4 @@ Handling error :
 - [ ] handling error
 - [ ] clean code (naming, refactoring, etc)
 - [ ] Handle the all thing with `vec<char>` instead of `Vec<String>` ?
+- [ ] add a github action for the test when push
