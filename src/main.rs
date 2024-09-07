@@ -1,8 +1,11 @@
 use std::{io::{self, Write}, time::Instant};
 
+use calcul::launch_calcul;
+
 mod calcul;
 mod parsing;
 mod check;
+mod tests;
 
 // TODO : handle ()()
 
@@ -18,11 +21,7 @@ fn main() {
 
     let time = Instant::now();
 
-    let operation = parsing::clean_input(&mut input);
+    let result = launch_calcul(input.clone());
 
-    let split_operation = parsing::split_operation(operation.clone());  
-
-    let result = calcul::calculate_expression(split_operation.clone());
-
-    println!("The operation and the result are :\n{} = {}\nIn : {:?}", operation.trim_end(), result, time.elapsed());
+    println!("The operation and the result are :\n{} = {}\nIn : {:?}", input.clone().trim_end(), result, time.elapsed());
 }

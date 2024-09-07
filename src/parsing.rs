@@ -19,7 +19,6 @@ pub fn split_operation(operation: String) -> Vec<String> {
 
     let mut index_to_go = 0;
     for (index, c) in operation.chars().enumerate() {
-        //println!("{:?}", v);
         if index_to_go >= operation.len() {
             last_index = operation.len();
             break;
@@ -41,7 +40,6 @@ pub fn split_operation(operation: String) -> Vec<String> {
 
             v.push(reg[0].clone());
             index_to_go = index + reg[0].len();
-            println!("skip to : {index_to_go}");
             reg.remove(0);
         } else if check::is_a_symbol(&c) {
             if &operation[index - 1..index] != ")" {
@@ -62,17 +60,6 @@ pub fn split_operation(operation: String) -> Vec<String> {
     }
 
     v
-}
-
-pub fn split_parenthesis_expression(s: String) -> Vec<String> {
-    let mut new_operations = s;
-
-    // removing the parenthesis
-    new_operations.remove(new_operations.len() - 1);
-    new_operations.remove(0);
-    
-    //returning the expression splitted
-    split_operation(new_operations)
 }
 
 pub fn get_regroupments(chars: &Vec<char>) -> Vec<String> {
