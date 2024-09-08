@@ -7,8 +7,6 @@ mod parsing;
 mod check;
 mod tests;
 
-// TODO : handle ()()
-
 fn main() {
     let mut input = String::new();
 

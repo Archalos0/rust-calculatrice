@@ -36,5 +36,7 @@ mod tests {
     #[test]
     fn test_association_parenhesis_parenthesis() {
         assert_eq!(launch_calcul("(2*3)(15+7)".to_string()), 132);
+        assert_eq!(launch_calcul("(5+6)(2*2+7)(9-3)".to_string()), 726);
+        assert_eq!(launch_calcul("((5-8)(7*8))(15+7)".to_string()), -3696);
     }
 }

@@ -13,44 +13,38 @@ pub fn split_operation(operation: String) -> Vec<String> {
 
     check::check_parenthesis_number(&char_v);
 
-    let mut reg = get_regroupments(&char_v);
+    char_v = add_missing_operator(&char_v);
 
-    let mut char_before = ' ';
+    let mut groupments = get_regroupments(&char_v);
 
     let mut index_to_go = 0;
-    for (index, c) in operation.chars().enumerate() {
-        if index_to_go >= operation.len() {
-            last_index = operation.len();
+    for (index, c) in char_v.iter().enumerate() {
+        if index_to_go >= char_v.len() {
+            last_index = char_v.len();
             break;
         }
 
         if index < index_to_go {
+            last_index = index;
             continue;
         }
 
-        if c == '(' {
-            if index > 0
-                && char_before != ' '
-                && (char_before == ')' || (char_before >= '0' && char_before <= '9'))
-            {
-                let left: String = operation[last_index..index].to_string();
+        if *c == '(' {
+            //adding groupment
+            v.push(groupments[0].clone());
+            index_to_go = index + groupments[0].len();
+            groupments.remove(0);
+        } else if check::is_a_symbol(&c) {
+            if char_v[index - 1] != ')' {
+                //adding element before the operato if that's not a groupment
+                let left: String = char_v[last_index..index].into_iter().collect();
                 v.push(left);
-                v.push(String::from("*"))
             }
 
-            v.push(reg[0].clone());
-            index_to_go = index + reg[0].len();
-            reg.remove(0);
-        } else if check::is_a_symbol(&c) {
-            if &operation[index - 1..index] != ")" {
-                let left: String = operation[last_index..index].to_string();
-                v.push(left);
-            }
+            //adding the operator
             v.push(c.to_string());
             last_index = index + 1;
         }
-
-        char_before = c;
     }
 
     // Ajouter le dernier opérande après la boucle
@@ -60,6 +54,24 @@ pub fn split_operation(operation: String) -> Vec<String> {
     }
 
     v
+}
+
+/**Adding the multiplication operator when it's not specified
+ * @param operation : the vector of the chars for the operation
+ * @return : the vector operation with the all the operator '*' missing
+ */
+fn add_missing_operator(operation: &Vec<char>) -> Vec<char> {
+    let mut chars = operation.clone();
+
+    for i in 1..chars.len() - 1 {
+        if chars[i] == ')' {
+            if chars[i + 1] == '(' {
+                chars.insert(i + 1, '*');
+            }
+        }
+    }
+
+    chars
 }
 
 pub fn get_regroupments(chars: &Vec<char>) -> Vec<String> {
