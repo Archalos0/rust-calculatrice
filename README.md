@@ -14,7 +14,7 @@ Handling error :
 # TODO
 - [x] data tests
 - [x] handling consecutives parenthesis
-- [ ] have to handle calcul with this form (8+2)2
+- [x] have to handle calcul with this form (8+2)2
 - [ ] handling error
 - [ ] clean code (naming, refactoring, etc)
 - [ ] Handle the all thing with `vec<char>` instead of `Vec<String>` ?
