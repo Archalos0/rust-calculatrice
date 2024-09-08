@@ -15,7 +15,7 @@ pub fn split_operation(operation: String) -> Vec<String> {
 
     let mut reg = get_regroupments(&char_v);
 
-    let mut char_before = ' ';
+    //let mut char_before = ' ';
 
     let mut index_to_go = 0;
     for (index, c) in operation.chars().enumerate() {
@@ -25,16 +25,20 @@ pub fn split_operation(operation: String) -> Vec<String> {
         }
 
         if index < index_to_go {
+            last_index = index;
             continue;
         }
 
         if c == '(' {
+            let char_before: char = if index == 0 { ' ' } else {char_v[index - 1 ]};
             if index > 0
                 && char_before != ' '
                 && (char_before == ')' || (char_before >= '0' && char_before <= '9'))
             {
-                let left: String = operation[last_index..index].to_string();
-                v.push(left);
+                if char_before != ')' {
+                    let left: String = operation[last_index..index].to_string();
+                    v.push(left);
+                }
                 v.push(String::from("*"))
             }
 
@@ -49,8 +53,6 @@ pub fn split_operation(operation: String) -> Vec<String> {
             v.push(c.to_string());
             last_index = index + 1;
         }
-
-        char_before = c;
     }
 
     // Ajouter le dernier opérande après la boucle
