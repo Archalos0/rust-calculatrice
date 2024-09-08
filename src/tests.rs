@@ -32,4 +32,9 @@ mod tests {
         assert_eq!(launch_calcul("0*7".to_string()), 0);
         assert_eq!(launch_calcul("10/1".to_string()), 10);
     }
+
+    #[test]
+    fn test_association_parenhesis_parenthesis() {
+        assert_eq!(launch_calcul("(2*3)(15+7)".to_string()), 132);
+    }
 }
