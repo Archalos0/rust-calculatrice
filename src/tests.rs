@@ -34,9 +34,17 @@ mod tests {
     }
 
     #[test]
-    fn test_association_parenhesis_parenthesis() {
+    fn test_consecutives_parenthesis() {
         assert_eq!(launch_calcul("(2*3)(15+7)".to_string()), 132);
         assert_eq!(launch_calcul("(5+6)(2*2+7)(9-3)".to_string()), 726);
         assert_eq!(launch_calcul("((5-8)(7*8))(15+7)".to_string()), -3696);
+    }
+
+    #[test]
+    fn test_implicit_multiplication_combined() {
+        assert_eq!(launch_calcul("2(3)(4)".to_string()), 24); // 2 * 3 * 4
+        assert_eq!(launch_calcul("5(2+3)4".to_string()), 100); // 5 * (2 + 3) * 4
+        assert_eq!(launch_calcul("2(3+4)".to_string()), 14); // 2 * (3 + 4)
+        assert_eq!(launch_calcul("5(2)".to_string()), 10); // 5 * 2
     }
 }
