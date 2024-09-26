@@ -48,8 +48,8 @@ pub fn split_operation(operation: String) -> Vec<String> {
     }
 
     // Ajouter le dernier opérande après la boucle
-    if last_index < operation.len() && &operation[last_index..last_index + 1] != "(" {
-        let right: String = operation[last_index..].to_string();
+    if last_index < char_v.len() && &char_v[last_index..].into_iter().collect::<String>() != "(" {
+        let right: String = char_v[last_index..].into_iter().collect();
         v.push(right.trim().to_string());
     }
 
@@ -61,15 +61,45 @@ pub fn split_operation(operation: String) -> Vec<String> {
  * @return : the vector operation with the all the operator '*' missing
  */
 fn add_missing_operator(operation: &Vec<char>) -> Vec<char> {
-    let mut chars = operation.clone();
+    let mut chars = Vec::new();
 
-    for i in 1..chars.len() - 1 {
-        if chars[i] == ')' {
-            if chars[i + 1] == '(' {
-                chars.insert(i + 1, '*');
+    let iter = operation.iter().enumerate();
+
+    for (index, c) in iter {
+        match *c {
+            ')' => {
+                chars.push(*c);
+                if index < operation.len() - 1 && ( operation[index + 1] == '(' || ( operation[index + 1] >= '1' && operation[index + 1] <= '9' ) ) {
+                    chars.push('*');
+                }    
+            },
+
+            '(' => {
+                if index > 0 && ( operation[index - 1] >= '1' && operation[index - 1] <= '9' ) {
+                    chars.push('*');
+                }
+                chars.push(*c);
+            },
+
+            _ => { 
+                chars.push(*c); 
             }
         }
     }
+
+    // for i in 1..chars.len() - 1 {
+    //     if chars[i] == ')' {
+    //         if chars[i + 1] == '(' || ( chars[i+1] >= '1' && chars[i+1] <= '9' ) {
+    //             chars.insert(i + 1, '*');
+    //         }
+    //     }
+
+    //     if chars[i] == '(' {
+    //         if chars[i - 1] == ')' ||  ( chars[i-1] >= '1' && chars[i-1] <= '9' ) {
+    //             chars.insert(i, '*');
+    //         }
+    //     }
+    // }
 
     chars
 }
