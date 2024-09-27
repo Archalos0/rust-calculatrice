@@ -3,48 +3,57 @@ mod tests {
     //use super::*; // Importe les fonctions du module principal
     use crate::calcul::launch_calcul;
 
+    fn test(operation_string: String, expected_result: i32) {
+        let result = launch_calcul(operation_string);
+    
+        match result {
+            Ok(value) => assert_eq!(value, expected_result),
+            Err(e) => panic!("Unexpected error: {:?}", e),
+        }
+    }
+
     #[test]
     fn test_basic_operations() {
-        assert_eq!(launch_calcul("1+1".to_string()), 2);
-        assert_eq!(launch_calcul("2*3".to_string()), 6);
-        assert_eq!(launch_calcul("6/2".to_string()), 3);
-        assert_eq!(launch_calcul("5-3".to_string()), 2);
+        test("1+1".to_string(), 2);
+        test("2*3".to_string(), 6);
+        test("6/2".to_string(), 3);
+        test("5-3".to_string(), 2);
     }
     
     #[test]
     fn test_parenthesis_operations() {
-        assert_eq!(launch_calcul("2*(3+4)".to_string()), 14);
-        assert_eq!(launch_calcul("(10-3)*2".to_string()), 14);
-        assert_eq!(launch_calcul("4*(6/2)".to_string()), 12);
+        test("2*(3+4)".to_string(), 14);
+        test("(10-3)*2".to_string(), 14);
+        test("4*(6/2)".to_string(), 12);
     }
 
     #[test]
     fn test_combinaison_operations() {
-        assert_eq!(launch_calcul("2+3*4".to_string()), 14);
-        assert_eq!(launch_calcul("(5+3)*2-4".to_string()), 12);
-        assert_eq!(launch_calcul("10/2+7*3".to_string()), 26);
+        test("2+3*4".to_string(), 14);
+        test("(5+3)*2-4".to_string(), 12);
+        test("10/2+7*3".to_string(), 26);
     }
 
     #[test]
     fn test_with_zero() {
-        assert_eq!(launch_calcul("0+5".to_string()), 5);
-        assert_eq!(launch_calcul("10-0".to_string()), 10);
-        assert_eq!(launch_calcul("0*7".to_string()), 0);
-        assert_eq!(launch_calcul("10/1".to_string()), 10);
+        test("0+5".to_string(), 5);
+        test("10-0".to_string(), 10);
+        test("0*7".to_string(), 0);
+        test("10/1".to_string(), 10);
     }
 
     #[test]
     fn test_consecutives_parenthesis() {
-        assert_eq!(launch_calcul("(2*3)(15+7)".to_string()), 132);
-        assert_eq!(launch_calcul("(5+6)(2*2+7)(9-3)".to_string()), 726);
-        assert_eq!(launch_calcul("((5-8)(7*8))(15+7)".to_string()), -3696);
+        test("(2*3)(15+7)".to_string(), 132);
+        test("(5+6)(2*2+7)(9-3)".to_string(), 726);
+        test("((5-8)(7*8))(15+7)".to_string(), -3696);
     }
 
     #[test]
     fn test_implicit_multiplication_combined() {
-        assert_eq!(launch_calcul("2(3)(4)".to_string()), 24); // 2 * 3 * 4
-        assert_eq!(launch_calcul("5(2+3)4".to_string()), 100); // 5 * (2 + 3) * 4
-        assert_eq!(launch_calcul("2(3+4)".to_string()), 14); // 2 * (3 + 4)
-        assert_eq!(launch_calcul("5(2)".to_string()), 10); // 5 * 2
+        test("2(3)(4)".to_string(), 24); 
+        test("5(2+3)4".to_string(), 100);
+        test("2(3+4)".to_string(), 14); 
+        test("5(2)".to_string(), 10);
     }
 }
