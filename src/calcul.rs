@@ -1,14 +1,16 @@
 use crate::check;
+use crate::errors::ErrorNumberParenthesis;
 use crate::parsing;
 
-pub fn launch_calcul(input: String) -> i32 {
+pub fn launch_calcul(input: String) -> Result<i32, ErrorNumberParenthesis> {
     let mut operation_string = input.clone();
 
     let operation = parsing::clean_input(&mut operation_string);
-    let split_operation = parsing::split_operation(operation.clone());  
+    let split_operation = parsing::split_operation(operation.clone())?;
 
-   calculate_expression(split_operation.clone())
+    Ok(calculate_expression(split_operation)?)
 }
+
 
 pub fn calculate(left_member: i32, right_member: i32, operator: String) -> i32 {
     match operator.as_str() {
@@ -20,7 +22,7 @@ pub fn calculate(left_member: i32, right_member: i32, operator: String) -> i32 {
     }
 }
 
-pub fn calculate_expression(v_operation: Vec<String>) -> i32 {
+pub fn calculate_expression(v_operation: Vec<String>) -> Result<i32, ErrorNumberParenthesis> {
     let mut operations = v_operation.clone();
 
     let result: i32;
@@ -28,9 +30,9 @@ pub fn calculate_expression(v_operation: Vec<String>) -> i32 {
     let groupments_index: Vec<usize> = check::get_parenthesis_expression(operations.clone());
 
     for i in 0..groupments_index.len() {
-        let groupment_split = split_parenthesis_operation(operations[groupments_index[i]].clone());
+        let groupment_split = split_parenthesis_operation(operations[groupments_index[i]].clone())?;
 
-        let groupment_calculate = calculate_expression(groupment_split);
+        let groupment_calculate = calculate_expression(groupment_split)?;
 
         operations.insert(
             groupments_index[i],
@@ -60,30 +62,30 @@ pub fn calculate_expression(v_operation: Vec<String>) -> i32 {
 
             operations.insert(
                 index_operation - 1,
-                calculate_expression(operations[index_operation - 1..index_operation + 2].to_vec())
+                calculate_expression(operations[index_operation - 1..index_operation + 2].to_vec())?
                     .to_string(),
             );
             operations.remove(index_operation);
             operations.remove(index_operation);
             operations.remove(index_operation);
 
-            result = calculate_expression(operations);
+            result = calculate_expression(operations)?;
         }
     }
 
-    result
+    Ok(result)
 }
 
-fn split_parenthesis_operation(groupment: String) -> Vec<String> {
+fn split_parenthesis_operation(groupment: String) -> Result<Vec<String>, ErrorNumberParenthesis> {
     let mut groupment = groupment;
 
     //Remove border parenthesis
     groupment.remove(0);
     groupment.remove(groupment.len() - 1);
 
-    let groupment_split = parsing::split_operation(groupment.clone());
+    let groupment_split = parsing::split_operation(groupment.clone())?;
 
-    groupment_split
+    Ok(groupment_split)
 }
 
 fn string_to_i32(s: &String) -> i32 {
