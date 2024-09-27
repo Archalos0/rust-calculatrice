@@ -1,6 +1,6 @@
-use crate::{check, errors::ErrorNumberParenthesis};
+use crate::{check, errors::CalculationError};
 
-pub fn split_operation(operation: String) -> Result<Vec<String>, ErrorNumberParenthesis> {
+pub fn split_operation(operation: String) -> Result<Vec<String>, CalculationError> {
     let mut v: Vec<String> = Vec::new();
 
     let mut last_index = 0;
@@ -12,7 +12,7 @@ pub fn split_operation(operation: String) -> Result<Vec<String>, ErrorNumberPare
     }
 
     if check::is_odd_number_parenthesis(&char_v) {
-        return Err(ErrorNumberParenthesis);
+        return Err(CalculationError::ErrorNumberParenthesis);
     }
 
     char_v = add_missing_operator(&char_v);

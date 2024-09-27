@@ -1,8 +1,8 @@
 use crate::check;
-use crate::errors::ErrorNumberParenthesis;
+use crate::errors::CalculationError;
 use crate::parsing;
 
-pub fn launch_calcul(input: String) -> Result<i32, ErrorNumberParenthesis> {
+pub fn launch_calcul(input: String) -> Result<i32, CalculationError> {
     let mut operation_string = input.clone();
 
     let operation = parsing::clean_input(&mut operation_string);
@@ -12,17 +12,22 @@ pub fn launch_calcul(input: String) -> Result<i32, ErrorNumberParenthesis> {
 }
 
 
-pub fn calculate(left_member: i32, right_member: i32, operator: String) -> i32 {
+pub fn calculate(left_member: i32, right_member: i32, operator: String) -> Result<i32, CalculationError> {
     match operator.as_str() {
-        "+" => left_member + right_member,
-        "-" => left_member - right_member,
-        "*" => left_member * right_member,
-        "/" => left_member / right_member,
-        _ => panic!("Unknown operator"),
+        "+" => Ok(left_member + right_member),
+        "-" => Ok(left_member - right_member),
+        "*" => Ok(left_member * right_member),
+        "/" => {
+            if right_member == 0 {
+                return Err(CalculationError::DivisionByZero);
+            }
+            Ok(left_member / right_member)
+        },
+        _ => Err(CalculationError::UnknownOperator(operator)),
     }
 }
 
-pub fn calculate_expression(v_operation: Vec<String>) -> Result<i32, ErrorNumberParenthesis> {
+pub fn calculate_expression(v_operation: Vec<String>) -> Result<i32, CalculationError> {
     let mut operations = v_operation.clone();
 
     let result: i32;
@@ -52,7 +57,7 @@ pub fn calculate_expression(v_operation: Vec<String>) -> Result<i32, ErrorNumber
                 string_to_i32(&operations[0]),
                 string_to_i32(&operations[2]),
                 operations[1].to_string(),
-            )
+            )?
         } else {
             //Calcul with operation priority
             let index_operation: usize = operations
@@ -76,7 +81,7 @@ pub fn calculate_expression(v_operation: Vec<String>) -> Result<i32, ErrorNumber
     Ok(result)
 }
 
-fn split_parenthesis_operation(groupment: String) -> Result<Vec<String>, ErrorNumberParenthesis> {
+fn split_parenthesis_operation(groupment: String) -> Result<Vec<String>, CalculationError> {
     let mut groupment = groupment;
 
     //Remove border parenthesis
