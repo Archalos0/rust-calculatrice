@@ -15,6 +15,9 @@ pub fn split_operation(operation: String) -> Result<Vec<String>, CalculationErro
         return Err(CalculationError::ErrorNumberParenthesis);
     }
 
+    //TODO: parenthesis placement : (5 + 3)) - (2 * (1 + 2) or 5 * )3 + 2( = parenthesis number ok but not the placement
+    //TODO: either change is_odd_number_parenthesis() or create a new function
+
     char_v = add_missing_operator(&char_v);
 
     let mut groupments = get_regroupments(&char_v);
