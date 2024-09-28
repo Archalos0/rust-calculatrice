@@ -1,6 +1,6 @@
 use std::usize;
 
-pub fn check_parenthesis_number(chars: &Vec<char>) {
+pub fn is_odd_number_parenthesis(chars: &Vec<char>) -> bool {
     let mut n_open_par = 0;
     let iter = chars.iter();
     iter.for_each(|c| if *c == '(' { n_open_par += 1 });
@@ -9,9 +9,7 @@ pub fn check_parenthesis_number(chars: &Vec<char>) {
     let iter = chars.iter();
     iter.for_each(|c| if *c == ')' { n_close_par += 1 });
 
-    if n_open_par != n_close_par {
-        panic!("Expression not valid");
-    }
+    n_open_par != n_close_par
 }
 
 pub fn is_a_symbol(c: &char) -> bool {

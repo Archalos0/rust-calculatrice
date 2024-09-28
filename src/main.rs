@@ -6,6 +6,7 @@ mod calcul;
 mod parsing;
 mod check;
 mod tests;
+mod errors;
 
 fn main() {
     let mut input = String::new();
@@ -21,5 +22,13 @@ fn main() {
 
     let result = launch_calcul(input.clone());
 
-    println!("The operation and the result are :\n{} = {}\nIn : {:?}", input.clone().trim_end(), result, time.elapsed());
+    match result {
+        Ok(res) => {
+            println!("The operation and the result are :\n{} = {}\nIn : {:?}", input.clone().trim_end(), res, time.elapsed());
+        }
+        Err(e) => {
+            println!("{}", e);
+        }
+    }
+
 }
